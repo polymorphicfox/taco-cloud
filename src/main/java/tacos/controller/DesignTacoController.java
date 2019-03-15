@@ -1,6 +1,5 @@
 package tacos.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +14,9 @@ import tacos.repository.TacoRepository;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Controller
 @RequestMapping("/design")
 @SessionAttributes("order")
@@ -27,14 +24,14 @@ public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
 
-    private TacoRepository designRepo;
+    private TacoRepository tacoRepo;
 
     @Autowired
     public DesignTacoController(
             IngredientRepository ingredientRepo,
-            TacoRepository designRepo) {
+            TacoRepository tacoRepo) {
         this.ingredientRepo = ingredientRepo;
-        this.designRepo = designRepo;
+        this.tacoRepo = tacoRepo;
     }
 
     @ModelAttribute(name = "order")
@@ -42,8 +39,8 @@ public class DesignTacoController {
         return new Order();
     }
 
-    @ModelAttribute(name = "taco")
-    public Taco taco() {
+    @ModelAttribute(name = "design")
+    public Taco design() {
         return new Taco();
     }
 
@@ -63,19 +60,18 @@ public class DesignTacoController {
 
     @PostMapping
     public String processDesign(
-            @Valid Taco design, Errors errors,
+            @Valid Taco taco, Errors errors,
             @ModelAttribute Order order) {
 
         if (errors.hasErrors()) {
             return "design";
         }
 
-        Taco saved = designRepo.save(design);
+        Taco saved = tacoRepo.save(taco);
         order.addDesign(saved);
 
         return "redirect:/orders/current";
     }
-    //end::processDesign[]
 
     private List<Ingredient> filterByType(
             List<Ingredient> ingredients, Type type) {
@@ -85,4 +81,3 @@ public class DesignTacoController {
                 .collect(Collectors.toList());
     }
 }
-

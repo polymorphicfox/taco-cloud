@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-//    @Qualifier("userDetailsServiceImpl")
+    @Qualifier("userDetailsServiceImpl")
     private UserDetailsService userDetailsService;
 
     private PasswordEncoder encoder =
@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder encoder() {
-        return new StandardPasswordEncoder("53cr3t");
+        return this.encoder;
     }
 
     @Override
@@ -56,7 +56,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf()
                 .ignoringAntMatchers("/h2-console/**")
-                // end::csrfIgnore[]
 
                 // Allow pages to be loaded in frames from the same origin; needed for H2-Console
                 .and()
